@@ -176,7 +176,7 @@ function matcher(designers) {
     }
 
     if (!assigned) {
-      throw new Error(\`모든 지망이 중복되어 \${name} 배정 실패! 데이터 수 확인 필요.\`);
+      throw new Error("모든 지망이 중복되어 " + name + " 배정 실패! 데이터 수 확인 필요.");
     }
 
     result.push({ designer: name, model: assigned, preferenceRank: rank });
