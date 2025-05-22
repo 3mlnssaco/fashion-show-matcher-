@@ -115,7 +115,6 @@
 
 ## 기술 스택
 
-- React
 - TypeScript
 - Tailwind CSS
 - xlsx (엑셀 파일 처리)
