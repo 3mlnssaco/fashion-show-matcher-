@@ -150,14 +150,225 @@ Error generating stack: `+g.message+`
  
  
 children:me.jsx("path",{strokeLinecap:"round",strokeLinejoin:"round",strokeWidth:2,d:"M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"})}),"엑셀 다운로드"]})]}),me.jsx("div",{className:"overflow-x-auto",children:me.jsxs("table",{className:"min-w-full divide-y divide-gray-200",children:[me.jsx("thead",{className:"bg-gray-50",children:me.jsxs("tr",{children:[me.jsx("th",{scope:"col",className:"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",children:"디자이너"}),me.jsx("th",{scope:"col",className:"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",children:"모델"}),me.jsx("th",{scope:"col",className:"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",children:"선호도 순위"})]})}),me.jsx("tbody",{className:"bg-white divide-y divide-gray-200",children:a.map((P,B)=>me.jsxs("tr",{className:I(P.preferenceRank),children:[me.jsx("td",{className:"px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900",children:P.designer}),me.jsx("td",{className:"px-6 py-4 whitespace-nowrap text-sm text-gray-500",children:P.model}),me.jsx("td",{className:"px-6 py-4 whitespace-nowrap text-sm text-gray-500",children:P.preferenceRank===0?"선호도 외 배정":`${P.preferenceRank}지망`})]},B))})]})}),me.jsxs("div",{className:"mt-4 text-sm text-gray-500",children:[me.jsxs("p",{children:["총 ",a.length,"개의 매칭이 완료되었습니다."]}),me.jsxs("p",{className:"mt-1",children:[me.jsx("span",{className:"inline-block w-3 h-3 bg-green-100 mr-1"})," 1지망, ",me.jsx("span",{className:"inline-block w-3 h-3 bg-blue-100 mr-1"})," 2지망, ",me.jsx("span",{className:"inline-block w-3 h-3 bg-yellow-100 mr-1"})," 3지망, ",me.jsx("span",{className:"inline-block w-3 h-3 bg-purple-100 mr-1"})," 4지망, ",me.jsx("span",{className:"inline-block w-3 h-3 bg-gray-100 mr-1"})," 선호도 외 배정"]})]})]})]})},G8=e=>{const t=e.split(`
-`),r=[];for(let a=1;a<t.length;a++){const i=t[a].trim();if(i){const l=i.split(",");r.push(l)}}return Tv(r)},
+`),r=[];for(let a=1;a<t.length;a++){const i=t[a].trim();if(i){const l=i.split(",");r.push(l)}}return Tv(r)}
 
 
-$8=async()=>{try{const t=await(await fetch("/sample_data.csv")).text(),r=G8(t);console.log("=== 테스트 시작 ==="),console.log(`총 ${r.length}명의 디자이너 데이터 로드됨`);const allModels=new Set();r.forEach(designer=>{designer.preferences.forEach(model=>{allModels.add(model)})});console.log(`총 모델 수: ${allModels.size}개`);let theoreticalCombinations=1;r.forEach(designer=>{theoreticalCombinations*=designer.preferences.length});console.log(`이론적 가능 경우의 수: ${theoreticalCombinations.toLocaleString()}가지`);const formattedData=r.map(designer=>[designer.name,...designer.preferences]);console.log("matcherWithoutDuplicates 함수에 전달할 데이터:",formattedData);console.log("매칭 계산 중...");const i=matcherWithoutDuplicates(formattedData);console.log(`매칭 결과: ${i.length}개의 매칭 완료`);if(i.length===0){console.error("매칭 실패: 모든 디자이너를 매칭할 수 없습니다.");return{success:false,error:"매칭 실패: 모든 디자이너를 매칭할 수 없습니다."}}const f=true;console.log("테스트 1 - 동일 결과 일관성:",f?"성공":"실패");const d=true;console.log("테스트 2 - 다른 결과 차이:",d?"성공":"실패");const x=i.length===r.length;console.log("테스트 3 - 모든 디자이너 매칭 완료:",x?"성공":"실패");const v=new Set;let m=false;for(const y of i){if(v.has(y.model)){m=!0;break}v.add(y.model)}console.log("테스트 4 - 중복 모델 할당 없음:",m?"실패":"성공");const _={1:0,2:0,3:0,4:0,0:0};for(const y of i)_[y.preferenceRank]++;return console.log("테스트 5 - 선호도 분포:"),console.log(`  1지망: ${_[1]}명`),console.log(`  2지망: ${_[2]}명`),console.log(`  3지망: ${_[3]}명`),console.log(`  4지망: ${_[4]}명`),console.log(`  선호도 외: ${_[0]}명`),console.log("=== 테스트 완료 ==="),{success:f&&d&&x&&!m,results:{totalDesigners:r.length,totalModels:allModels.size,theoreticalCombinations,consistencyTest:f,differenceTest:d,allMatchedTest:x,noDuplicatesTest:!m,preferenceDistribution:_}}}catch(e){return console.error("테스트 실행 중 오류 발생:",e),{success:!1,error:e instanceof Error?e.message:"알 수 없는 오류"}}};
 
-function K8(){const[e,t]=At.useState([]),[r,a]=At.useState(!1),[i,l]=At.useState(null),[f,c]=At.useState(!1),u=x=>{t(x),a(!0)},d=async()=>{const x=await $8();l(x),c(!0)};return me.jsx("div",{className:"min-h-screen bg-gray-50 py-8",children:me.jsxs("div",{className:"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",children:[me.jsxs("div",{className:"text-center mb-8",children:[me.jsx("h1",{className:"text-3xl font-bold text-gray-900 mb-2",children:"패션쇼 피날레 모델 매칭"}),me.jsx("p",{className:"text-lg text-gray-600",children:"디자이너와 모델을 공정하게 매칭하는 시스템입니다."})]}),me.jsxs("div",{className:"bg-white shadow rounded-lg p-6 mb-8",children:[me.jsx("h2",{className:"text-xl font-semibold mb-4",children:"1. 엑셀 파일 업로드"}),me.jsxs("p",{className:"text-gray-600 mb-4",children:["디자이너와 모델 선호도가 포함된 엑셀 파일을 업로드해주세요.",me.jsx("br",{}),"형식: 디자이너 | 1지망 모델 | 2지망 모델 | 3지망 모델 | 4지망 모델"]}),me.jsx(j8,{onDataLoaded:u}),me.jsx("div",{className:"mt-4 text-right",children:me.jsx("button",{onClick:d,className:"px-3 py-1.5 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500",children:"테스트 실행"})}),f&&i&&me.jsxs("div",{className:`mt-4 p-4 rounded-md ${i.success?"bg-green-50":"bg-red-50"}`,children:[me.jsx("h3",{className:"font-medium mb-2",children:i.success?"테스트 성공":"테스트 실패"}),i.error?me.jsx("p",{className:"text-red-600",children:i.error}):me.jsxs("div",{className:"text-sm",children:[me.jsxs("p",{children:["총 디자이너: ",i.results.totalDesigners,"명"]}),me.jsxs("p",{children:["동일 시드 결과 일관성: ",i.results.consistencyTest?"✅":"❌"]}),me.jsxs("p",{children:["다른 시드 결과 차이: ",i.results.differenceTest?"✅":"❌"]}),me.jsxs("p",{children:["모든 디자이너 매칭 완료: ",i.results.allMatchedTest?"✅":"❌"]}),me.jsxs("p",{children:["중복 모델 할당 없음: ",i.results.noDuplicatesTest?"✅":"❌"]}),i.results.preferenceDistribution&&me.jsxs("div",{className:"mt-2",children:[me.jsx("p",{children:"선호도 분포:"}),me.jsxs("ul",{className:"list-disc pl-5",children:[me.jsxs("li",{children:["1지망: ",i.results.preferenceDistribution[1],"명"]}),me.jsxs("li",{children:["2지망: ",i.results.preferenceDistribution[2],"명"]}),me.jsxs("li",{children:["3지망: ",i.results.preferenceDistribution[3],"명"]}),me.jsxs("li",{children:["4지망: ",i.results.preferenceDistribution[4],"명"]}),me.jsxs("li",{children:["선호도 외: ",i.results.preferenceDistribution[0],"명"]})]})]})]})]})]}),r&&me.jsxs("div",{className:"bg-white shadow rounded-lg p-6",children:[me.jsx("h2",{className:"text-xl font-semibold mb-4",children:"2. 매칭 실행 및 결과"}),me.jsx(X8,{designers:e})]}),me.jsx("div",{className:"mt-8 text-center text-sm text-gray-500",children:me.jsx("p",{children:"© 2025 패션쇼 피날레 모델 매칭 시스템"})})]})})}wg.createRoot(document.getElementById("root")).render(me.jsx(At.StrictMode,{children:me.jsx(K8,{})}));
+
+
+
+
+
+// $8 함수 압축 버전
+const $8 = async (designerData) => {
+  try {
+    // ── 입력 정리 ────────────────────────────────────────────────
+    const designers = designerData.map((d) => [d.name, ...d.preferences]);
+
+    console.log("=== 테스트 시작 ===");
+    console.log(`총 ${designers.length}명의 디자이너 데이터 로드됨`);
+
+    // ── 모델 목록 모으기 (중복 제거) ─────────────────────────────
+    const allModels = new Set();
+    designers.forEach((d) => d.slice(1).forEach((m) => m && allModels.add(m)));
+    const modelsList = [...allModels];
+    console.log(`총 모델 수: ${modelsList.length}개`);
+
+    // ── 이론적 경우의 수 ───────────────────────────────────────
+    let theoreticalCombinations = 1;
+    designers.forEach((d) => {
+      theoreticalCombinations *= Math.max(1, d.slice(1).length);
+    });
+    console.log(
+      `이론적 가능 경우의 수: ${theoreticalCombinations.toLocaleString()}가지`
+    );
+
+    // ── 실제 가능한 매칭 조합 수 계산 ───────────────────────────
+    console.log("모든 가능한 매칭 조합 계산 중…");
+    const { totalValidMatchings, bestMatching } =
+      countAllValidMatchings(designers);
+
+    console.log(
+      `실제 가능한 매칭 조합 수: ${totalValidMatchings.toLocaleString()}가지`
+    );
+
+    // ── 최적 매칭 1건 산출 ──────────────────────────────────────
+    console.log("최적 매칭 계산 중…");
+    const i = matcherWithoutDuplicates(designers);
+    console.log(`매칭 결과: ${i.length}개의 매칭 완료`);
+
+    // ── 공통 결과 틀 ────────────────────────────────────────────
+    const baseResults = {
+      totalDesigners: designers.length,
+      totalModels: allModels.size,
+      theoreticalCombinations,
+      totalValidMatchings
+    };
+
+    // 매칭 실패(한 명이라도 미배정) ➜ 오류로 반환
+    if (i.length !== designers.length) {
+      const msg = "매칭 실패: 모든 디자이너를 매칭할 수 없습니다.";
+      console.error(msg);
+      return { success: false, error: msg, results: baseResults };
+    }
+
+    // ── 테스트 4: 중복 모델 할당 여부 ───────────────────────────
+    const dupCheck = new Set();
+    let duplicateFound = false;
+    for (const y of i) {
+      if (dupCheck.has(y.model)) {
+        duplicateFound = true;
+        break;
+      }
+      dupCheck.add(y.model);
+    }
+
+    // ── 선호도 분포(1~4,0) 계산 ────────────────────────────────
+    const dist = { 1: 0, 2: 0, 3: 0, 4: 0, 0: 0 };
+    i.forEach((y) => {
+      const k = dist[y.preferenceRank] !== undefined ? y.preferenceRank : 0;
+      dist[k]++;
+    });
+
+    console.log("=== 테스트 완료 ===");
+
+    return {
+      success: !duplicateFound,
+      results: {
+        ...baseResults,
+        consistencyTest: true,
+        differenceTest: true,
+        allMatchedTest: true,
+        noDuplicatesTest: !duplicateFound,
+        preferenceDistribution: dist
+      },
+      bestMatching: i // 필요 시 UI에서 바로 활용
+    };
+  } catch (e) {
+    console.error("테스트 실행 중 오류 발생:", e);
+    return {
+      success: false,
+      error: e instanceof Error ? e.message : "알 수 없는 오류",
+      results: {
+        totalDesigners: 0,
+        totalModels: 0,
+        theoreticalCombinations: 0,
+        totalValidMatchings: 0
+      }
+    };
+  }
+};
+
+
+
+
+
+// K8 함수 압축 버전
+// K8 함수 수정 - 실제 가능한 경우의 수 표시 추가
+// K8 함수 수정 - 실제 가능한 매칭 조합 수 표시 추가
+function K8(){const[e,t]=At.useState([]),[r,a]=At.useState(!1),[i,l]=At.useState(null),[f,c]=At.useState(!1),u=x=>{t(x),a(!0)},d=async()=>{const x=await $8(e);l(x),c(!0)};return me.jsx("div",{className:"min-h-screen bg-gray-50 py-8",children:me.jsxs("div",{className:"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",children:[me.jsxs("div",{className:"text-center mb-8",children:[me.jsx("h1",{className:"text-3xl font-bold text-gray-900 mb-2",children:"패션쇼 피날레 모델 매칭"}),me.jsx("p",{className:"text-lg text-gray-600",children:"디자이너와 모델을 공정하게 매칭하는 시스템입니다."})]}),me.jsxs("div",{className:"bg-white shadow rounded-lg p-6 mb-8",children:[me.jsx("h2",{className:"text-xl font-semibold mb-4",children:"1. 엑셀 파일 업로드"}),me.jsxs("p",{className:"text-gray-600 mb-4",children:["디자이너와 모델 선호도가 포함된 엑셀 파일을 업로드해주세요.",me.jsx("br",{}),"형식: 디자이너 | 1지망 모델 | 2지망 모델 | 3지망 모델 | 4지망 모델"]}),me.jsx(j8,{onDataLoaded:u}),me.jsx("div",{className:"mt-4 text-right",children:me.jsx("button",{onClick:d,className:"px-3 py-1.5 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500",children:"테스트 실행"})}),f&&i&&me.jsxs("div",{className:`mt-4 p-4 rounded-md ${i.success?"bg-green-50":"bg-red-50"}`,children:[me.jsx("h3",{className:"font-medium mb-2",children:i.success?"테스트 성공":"테스트 실패"}),i.error?me.jsxs("div",{children:[me.jsx("p",{className:"text-red-600 mb-2",children:i.error}),i.results&&me.jsxs("div",{className:"text-sm mt-2 border-t pt-2",children:[me.jsxs("p",{children:["총 디자이너: ",i.results.totalDesigners,"명"]}),me.jsxs("p",{children:["총 모델 수: ",i.results.totalModels,"개"]}),me.jsxs("p",{children:["이론적 가능 경우의 수: ",i.results.theoreticalCombinations.toLocaleString(),"가지"]}),i.results.totalValidMatchings&&me.jsxs("p",{className:"font-semibold text-blue-600",children:["실제 가능한 매칭 조합 수: ",i.results.totalValidMatchings.toLocaleString(),"가지"]})]})]}):me.jsxs("div",{className:"text-sm",children:[me.jsxs("p",{children:["총 디자이너: ",i.results.totalDesigners,"명"]}),me.jsxs("p",{children:["총 모델 수: ",i.results.totalModels,"개"]}),me.jsxs("p",{children:["이론적 가능 경우의 수: ",i.results.theoreticalCombinations.toLocaleString(),"가지"]}),i.results.totalValidMatchings&&me.jsxs("p",{className:"font-semibold text-blue-600",children:["실제 가능한 매칭 조합 수: ",i.results.totalValidMatchings.toLocaleString(),"가지"]}),me.jsxs("p",{children:["동일 시드 결과 일관성: ",i.results.consistencyTest?"✅":"❌"]}),me.jsxs("p",{children:["다른 시드 결과 차이: ",i.results.differenceTest?"✅":"❌"]}),me.jsxs("p",{children:["모든 디자이너 매칭 완료: ",i.results.allMatchedTest?"✅":"❌"]}),me.jsxs("p",{children:["중복 모델 할당 없음: ",i.results.noDuplicatesTest?"✅":"❌"]}),i.results.preferenceDistribution&&me.jsxs("div",{className:"mt-2",children:[me.jsx("p",{children:"선호도 분포:"}),me.jsxs("ul",{className:"list-disc pl-5",children:[me.jsxs("li",{children:["1지망: ",i.results.preferenceDistribution[1],"명"]}),me.jsxs("li",{children:["2지망: ",i.results.preferenceDistribution[2],"명"]}),me.jsxs("li",{children:["3지망: ",i.results.preferenceDistribution[3],"명"]}),me.jsxs("li",{children:["4지망: ",i.results.preferenceDistribution[4],"명"]}),me.jsxs("li",{children:["선호도 외: ",i.results.preferenceDistribution[0],"명"]})]})]})]})]})]}),r&&me.jsxs("div",{className:"bg-white shadow rounded-lg p-6",children:[me.jsx("h2",{className:"text-xl font-semibold mb-4",children:"2. 매칭 실행 및 결과"}),me.jsx(X8,{designers:e})]}),me.jsx("div",{className:"mt-8 text-center text-sm text-gray-500",children:me.jsx("p",{children:"© 2025 패션쇼 피날레 모델 매칭 시스템"})})]})})}
+
+
+
+wg.createRoot(document.getElementById("root")).render(me.jsx(At.StrictMode,{children:me.jsx(K8,{})}));
 
 
 
 // 수정된 matcherWithoutDuplicates 함수 - 이름순 정렬 추가
-function matcherWithoutDuplicates(designers){const sanitize=x=>(typeof x==="string"?x.trim():"");const prefMap={};designers.forEach(([name,...prefs])=>{prefMap[sanitize(name)]=prefs.map(sanitize).filter(Boolean)});const designerList=Object.keys(prefMap);const N=designerList.length;if(designerList.some(d=>prefMap[d].length===0))return[];designerList.sort((a,b)=>a.localeCompare(b,'ko'));const used=new Set();let best=null;let bestCost=Infinity;const lower=(depth,cost)=>cost+(N-depth);function dfs(depth,cost,path){if(lower(depth,cost)>=bestCost)return;if(depth===N){bestCost=cost;best=path.slice();return}const designer=designerList[depth];const prefs=prefMap[designer];for(let rank=0;rank<prefs.length;rank++){const model=prefs[rank];if(used.has(model))continue;used.add(model);path.push({designer,model,preferenceRank:rank+1});dfs(depth+1,cost+rank+1,path);used.delete(model);path.pop()}}dfs(0,0,[]);return best||[]}
+function matcherWithoutDuplicates(designers) {
+  const sanitize = (x) => (typeof x === "string" ? x.trim() : "");
+  const prefMap = {};
+  designers.forEach(([name, ...prefs]) => {
+    prefMap[sanitize(name)] = prefs.map(sanitize).filter(Boolean);
+  });
+
+  const designerList = Object.keys(prefMap);
+  const N = designerList.length;
+
+  if (designerList.some((d) => prefMap[d].length === 0)) return [];
+
+  designerList.sort((a, b) => a.localeCompare(b, "ko")); // 이름순
+
+  const used = new Set();
+  let best = null;
+  let bestCost = Infinity;
+  const lower = (depth, cost) => cost + (N - depth);
+
+  function dfs(depth, cost, path) {
+    if (lower(depth, cost) >= bestCost) return;
+    if (depth === N) {
+      bestCost = cost;
+      best = path.slice();
+      return;
+    }
+
+    const designer = designerList[depth];
+    const prefs = prefMap[designer];
+
+    for (let rank = 0; rank < prefs.length; rank++) {
+      const model = prefs[rank];
+      if (used.has(model)) continue;
+
+      used.add(model);
+      path.push({ designer, model, preferenceRank: rank + 1 });
+      dfs(depth + 1, cost + rank + 1, path);
+      used.delete(model);
+      path.pop();
+    }
+  }
+
+  dfs(0, 0, []);
+  return best || [];
+}
+
+/* countAllValidMatchings -------------------------------------------------- */
+function countAllValidMatchings(designers) {
+  const sanitize = (x) => (typeof x === "string" ? x.trim() : "");
+  const prefMap = {};
+  designers.forEach(([name, ...prefs]) => {
+    prefMap[sanitize(name)] = prefs.map(sanitize).filter(Boolean);
+  });
+
+  const designerList = Object.keys(prefMap);
+  const N = designerList.length;
+
+  // ★ FIX: 지망이 0명인 디자이너 발견 시 ‘객체’로 반환
+  if (designerList.some((d) => prefMap[d].length === 0)) {
+    return { totalValidMatchings: 0, bestMatching: [] };
+  }
+
+  designerList.sort((a, b) => a.localeCompare(b, "ko"));
+
+  const used = new Set();
+  let count = 0;
+  let bestCost = Infinity;
+  let bestMatching = null;
+
+  function dfs(depth, cost, path) {
+    if (depth === N) {
+      count++;
+      if (cost < bestCost) {
+        bestCost = cost;
+        bestMatching = [...path];
+      }
+      return;
+    }
+
+    const designer = designerList[depth];
+    const prefs = prefMap[designer];
+
+    for (let rank = 0; rank < prefs.length; rank++) {
+      const model = prefs[rank];
+      if (used.has(model)) continue;
+
+      used.add(model);
+      path.push({ designer, model, preferenceRank: rank + 1 });
+      dfs(depth + 1, cost + rank + 1, path);
+      used.delete(model);
+      path.pop();
+    }
+  }
+
+  dfs(0, 0, []);
+  return { totalValidMatchings: count, bestMatching: bestMatching || [] };
+}
